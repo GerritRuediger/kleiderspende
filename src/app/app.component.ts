@@ -9,7 +9,7 @@ import {
 import { MatInput } from '@angular/material/input';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { AbgabeOptions } from './abgabe-options';
+import { AbgabeOptions } from './models/abgabe-options';
 import { NgForOf, NgIf } from '@angular/common';
 import {
   AbstractControl,
@@ -21,10 +21,22 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { KleiderArten } from './kleider-arten';
-import { Krisengebiete } from './krisengebiete';
+import { KleiderArten } from './models/kleider-arten';
+import { Krisengebiete } from './models/krisengebiete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
+import {
+  HttpClient,
+  HttpClientModule,
+  HttpHandler,
+} from '@angular/common/http';
+import { mergeAll } from 'rxjs';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-root',
@@ -44,6 +56,11 @@ import { MatButton } from '@angular/material/button';
     MatOption,
     MatButton,
     MatError,
+    HttpClientModule,
+    MatCard,
+    MatCardHeader,
+    MatCardContent,
+    MatCardActions,
   ],
   providers: [
     {
@@ -60,17 +77,21 @@ export class AppComponent implements OnInit {
   plzDienststelle = 41460;
 
   formGroup = new FormGroup({
-    vorname: new FormControl('', Validators.required),
-    nachname: new FormControl('', Validators.required),
-    abgabe: new FormControl(AbgabeOptions.ABHOLUNG, Validators.required),
+    vorname: new FormControl<string | null>(null, Validators.required),
+    nachname: new FormControl<string | null>(null, Validators.required),
+    abgabe: new FormControl<AbgabeOptions | null>(
+      AbgabeOptions.ABHOLUNG,
+      Validators.required,
+    ),
     strasse: new FormControl<string | null>(null, Validators.required),
+    hausnr: new FormControl<string | null>(null, Validators.required),
     plz: new FormControl<number | null>(null, [
       Validators.required,
       this.plzNaeheValidator(this.plzDienststelle),
       Validators.minLength(5),
       Validators.maxLength(5),
     ]),
-    ort: new FormControl<string | null>(null, Validators.required),
+    ort: new FormControl<string | null>({ value: null, disabled: true }),
     kleiderarten: new FormControl<KleiderArten[] | null>(
       null,
       Validators.required,
@@ -105,7 +126,7 @@ export class AppComponent implements OnInit {
   });
 
   private readonly destroyRef = inject(DestroyRef);
-  plzErrorMessage: string = '';
+  private readonly http = inject(HttpClient);
 
   ngOnInit(): void {
     this.formGroup.controls.abgabe.valueChanges
@@ -123,6 +144,18 @@ export class AppComponent implements OnInit {
           this.formGroup.updateValueAndValidity();
         }
       });
+
+    this.formGroup.controls.plz.valueChanges.subscribe((plz) => {
+      if (
+        plz &&
+        this.formGroup.controls.plz.status === 'VALID' &&
+        String(plz).length == 5
+      ) {
+        this.setOrtForPlz(plz);
+      } else {
+        this.formGroup.controls.ort.setValue(null);
+      }
+    });
   }
 
   protected isAbgabeOptionAbholung(): boolean {
@@ -138,7 +171,6 @@ export class AppComponent implements OnInit {
   }
 
   getErrorMessage(): string {
-    console.log(this.formGroup.controls.plz.errors);
     if (
       this.formGroup.controls.plz.hasError('minlength') ||
       this.formGroup.controls.plz.hasError('maxlength')
@@ -146,9 +178,29 @@ export class AppComponent implements OnInit {
       return 'Das Format entspricht nicht einer Postleitzahl';
     } else if (this.formGroup.controls.plz.hasError('plzNaehe')) {
       return 'Abholadresse liegt nicht in der Nähe der Geschaeftsstelle';
+    } else if (this.formGroup.controls.plz.hasError('notValid')) {
+      return 'Diese Postleitzahl gibt es nicht';
     } else {
       return '';
     }
+  }
+
+  setOrtForPlz(plz: number): void {
+    const url = `https://openplzapi.org/de/Localities?postalCode=${plz}`;
+    this.http
+      .get(url)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((response: unknown) => {
+        const orte = response as { name: string }[];
+        if (orte.length == 0) {
+          this.formGroup.controls.plz.setErrors({ notValid: true });
+        } else {
+          this.formGroup.controls.plz.setErrors(null);
+          this.formGroup.controls.ort.setValue(
+            orte.length > 0 ? orte[0].name : null,
+          );
+        }
+      });
   }
 
   plzNaeheValidator(plz: number): ValidatorFn {
