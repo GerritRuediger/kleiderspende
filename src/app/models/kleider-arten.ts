@@ -1,8 +1,0 @@
-export enum KleiderArten {
-  JACKEN = 'JACKEN',
-  SCHUHE = 'SCHUHE',
-  TSHIRTS = 'TSHIRTS',
-  HOSEN = 'HOSEN',
-  PULLOVER = 'PULLOVER',
-  SONSTIGES = 'SONSTIGES',
-}

@@ -1,0 +1,26 @@
+<mat-card style="margin-left: 8px; margin-right: 8px">
+  <mat-card-header><h2>Registrierung abgeschlossen</h2></mat-card-header>
+  <mat-card-content>
+    <p>Vielen Dank für Ihre Spende an das Krisengebiet {{ kleiderspende.krisengebiet }}</p>
+    <mat-list>
+      <mat-list-item>
+        <span><b>Name:</b> {{ kleiderspende.vorname }} {{ kleiderspende.nachname }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span><b>Abgabeart:</b> {{ kleiderspende.abgabeOption }}</span>
+      </mat-list-item>
+      <mat-list-item *ngIf="isAdresseVisible()">
+        <span><b>Adresse:</b> {{ kleiderspende.strasse }} {{ kleiderspende.hausnr }}</span>
+      </mat-list-item>
+      <mat-list-item *ngIf="isAdresseVisible()">
+        <span><b>Ort:</b> {{ kleiderspende.plz }} {{ kleiderspende.ort }}</span>
+      </mat-list-item>
+      <mat-list-item *ngIf="isAdresseVisible()">
+        <span><b>Ausgewählte Spenden:</b> å{{ getSelectedKleiderarten() }}</span>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-flat-button color="primary" (click)="onWeitereSpende()">Weitere Spende registrieren</button>
+  </mat-card-actions>
+</mat-card>
