@@ -1,12 +1,19 @@
-<mat-toolbar>
-  <h1>Kleiderspende</h1>
-</mat-toolbar>
-<p>Herzlich Willkommen bei der Kleiderspende in 41460 Neuss. Bitte registrieren Sie Ihre Spende in dem nachfolgenden
-  Formular.</p>
-<app-registrierung-form *ngIf="kleiderspende == null"
-                        (registrierungClicked)="onRegistrierungClicked($event)"></app-registrierung-form>
-<app-registrierung-success *ngIf="kleiderspende" [kleiderspende]="kleiderspende"
-                           (weitereSpendeClicked)="onWeitereSpende()"></app-registrierung-success>
-<footer class="footer mat-toolbar">
-  <p>Datenschutz</p>
+<header class="header">
+  <div id="logo">
+    <img src="assets/logo.png" alt="logo Kleiderspende">
+  </div>
+  <div id="text">
+    <h1>Kleiderspende</h1>
+  </div>
+</header>
+<app-navigation></app-navigation>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
+<footer>
+  <div class="footer-content">
+    <span>&copy; 2024 Kleiderspende</span>
+    <a href="#">Impressum</a>
+    <a href="#">Datenschutz</a>
+  </div>
 </footer>

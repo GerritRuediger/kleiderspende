@@ -12,6 +12,8 @@ import {
   MatCardActions,
   MatCardContent,
   MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle,
 } from '@angular/material/card';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import {
@@ -23,18 +25,19 @@ import {
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { AbgabeOptions } from '../../shared/models/abgabe-options';
-import { KleiderArten } from '../../shared/models/kleider-arten';
-import { Krisengebiete } from '../../shared/models/krisengebiete';
+import { AbgabeOptions } from '../../../shared/models/abgabe-options';
+import { KleiderArten } from '../../../shared/models/kleider-arten';
+import { Krisengebiete } from '../../../shared/models/krisengebiete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PlzService } from '../../shared/services/plz.service';
-import { Kleiderspende } from '../../shared/models/kleiderspende';
-import { PlzModule } from '../../shared/services/plz.module';
+import { PlzService } from '../../../shared/services/plz.service';
+import { Kleiderspende } from '../../../shared/models/kleiderspende';
+import { PlzModule } from '../../../shared/services/plz.module';
 import { MatDivider } from '@angular/material/divider';
 import {
   plzLengthValidator,
   plzNaeheValidator,
 } from '../validators/plz-validator';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-registrierung-form',
@@ -56,6 +59,8 @@ import {
     MatError,
     PlzModule,
     MatDivider,
+    MatCardTitle,
+    MatCardSubtitle,
   ],
   templateUrl: './registrierung-form.component.html',
   styleUrl: './registrierung-form.component.scss',
@@ -191,10 +196,27 @@ export class RegistrierungFormComponent implements OnInit {
         kleiderarten: this.formGroup.controls.kleiderarten.value!,
         krisengebiet: this.formGroup.controls.krisengebiet.value!,
         timestamp: new Date(),
+        abholzeitpunkt: this.isAbgabeOptionAbholung()
+          ? this.generateAbholzeitpunkt()
+          : null,
       };
 
       this.registrierungClicked.emit(kleiderspende);
     }
+  }
+
+  protected generateAbholzeitpunkt() {
+    return dayjs()
+      .add(this.getRandomIntInclusive(1, 5), 'days')
+      .set('hour', this.getRandomIntInclusive(8, 20))
+      .set('minute', 0)
+      .toDate();
+  }
+
+  protected getRandomIntInclusive(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   protected setOrtForPlz(plz: number): void {

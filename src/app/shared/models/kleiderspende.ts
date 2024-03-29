@@ -13,4 +13,5 @@ export interface Kleiderspende {
   kleiderarten: KleiderArten[];
   krisengebiet: Krisengebiete;
   timestamp: Date;
+  abholzeitpunkt: Date | null;
 }

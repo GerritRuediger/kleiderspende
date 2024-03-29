@@ -2,10 +2,13 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatToolbar } from '@angular/material/toolbar';
-import { RegistrierungFormComponent } from './registrierung-form/component/registrierung-form.component';
+import { RegistrierungFormComponent } from './registrierung/registrierung-form/component/registrierung-form.component';
 import { Kleiderspende } from './shared/models/kleiderspende';
-import { RegistrierungSuccessComponent } from './registrierung-success/registrierung-success.component';
-import { NgIf } from '@angular/common';
+import { RegistrierungSuccessComponent } from './registrierung/registrierung-success/registrierung-success.component';
+import { NgIf, NgOptimizedImage } from '@angular/common';
+import { MatListItem, MatNavList } from '@angular/material/list';
+import { RegistrierungComponent } from './registrierung/registrierung.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +19,11 @@ import { NgIf } from '@angular/common';
     RegistrierungFormComponent,
     RegistrierungSuccessComponent,
     NgIf,
+    MatNavList,
+    MatListItem,
+    NgOptimizedImage,
+    RegistrierungComponent,
+    NavigationComponent,
   ],
   providers: [
     {
@@ -28,13 +36,4 @@ import { NgIf } from '@angular/common';
 })
 export class AppComponent {
   title = 'Kleiderspende';
-  kleiderspende: Kleiderspende | null = null;
-
-  onRegistrierungClicked(kleiderspende: Kleiderspende): void {
-    this.kleiderspende = kleiderspende;
-  }
-
-  onWeitereSpende(): void {
-    this.kleiderspende = null;
-  }
 }

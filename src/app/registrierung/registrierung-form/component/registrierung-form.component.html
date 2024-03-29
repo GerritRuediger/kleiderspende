@@ -1,20 +1,28 @@
-<mat-card style="margin-left: 8px; margin-right: 8px">
-  <mat-card-header><h2>Registrierung einer Spende</h2></mat-card-header>
-  <mat-card-content>
+<div class="container">
+  <p>Herzlich Willkomen bei der Kleiderspende in 41460 Neuss. Bitte registrieren Sie Ihre Spende in dem nachfolgenden
+    Formular.</p>
+</div>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Registrierung einer Spende</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="container">
+
     <form [formGroup]="formGroup">
+      <h3>Persönliche Daten</h3>
       <div class="row">
-        <mat-form-field class="col-3">
+        <mat-form-field class="col-6">
           <mat-label>Vorname</mat-label>
           <input matInput formControlName="vorname"/>
         </mat-form-field>
-        <mat-form-field class="col-3">
+        <mat-form-field class="col-6">
           <mat-label>Nachname</mat-label>
           <input matInput formControlName="nachname"/>
         </mat-form-field>
         <br/>
       </div>
       <div class="row">
-        <mat-radio-group aria-label="Select an option" formControlName="abgabe" class="col-6">
+        <mat-radio-group aria-label="Select an option" formControlName="abgabe" class="col-12">
           @for (option of abgabeOptions; track option) {
             <mat-radio-button
               [value]="option.value"
@@ -27,31 +35,32 @@
       @if (isAbgabeOptionAbholung()) {
         <h3>Abholadresse</h3>
         <div class="row">
-          <mat-form-field class="col-5">
+          <mat-form-field class="col-8">
             <mat-label>Straße</mat-label>
             <input matInput formControlName="strasse"/>
           </mat-form-field>
-          <mat-form-field class="col-1">
+          <mat-form-field class="col-4">
             <mat-label>Hausnummer</mat-label>
             <input matInput formControlName="hausnr"/>
           </mat-form-field>
         </div>
         <div class="row">
-          <mat-form-field class="col-3">
+          <mat-form-field class="col-6">
             <mat-label>PLZ</mat-label>
             <input type="number" matInput formControlName="plz"/>
             @if (formGroup.controls.plz.invalid) {
               <mat-error>{{ getPlzErrorMessage() }}</mat-error>
             }
           </mat-form-field>
-          <mat-form-field class="col-3">
+          <mat-form-field class="col-6">
             <mat-label>Ort</mat-label>
             <input matInput formControlName="ort"/>
           </mat-form-field>
         </div>
       }
+      <h3>Was möchten Sie spenden?</h3>
       <div class="row">
-        <mat-form-field class="col-3">
+        <mat-form-field class="col-6">
           <mat-label>Kleiderarten</mat-label>
           <mat-select formControlName="kleiderarten" multiple>
             @for (kleidungsart of kleiderarten; track kleidungsart) {
@@ -59,7 +68,7 @@
             }
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="col-3">
+        <mat-form-field class="col-6">
           <mat-label>Krisengebiet</mat-label>
           <mat-select formControlName="krisengebiet">
             @for (krisengebiet of krisengebiete; track krisengebiet) {
@@ -69,8 +78,15 @@
         </mat-form-field>
       </div>
     </form>
+    @if (isAbgabeOptionAbholung()) {
+      <div class="row">
+        Hinweis: Ihre Kleider werden innerhalb 1 bis 5 Tagen abgeholt. Den genauen Zeitpunkt erhalen Sie in Ihrer
+        Bestätigung.
+      </div>
+    }
+
   </mat-card-content>
-  <mat-card-actions>
+  <mat-card-actions style="display: flex; flex-direction: row; justify-content: center; width: 100%">
     <button mat-flat-button color="primary" (click)="onRegistrierenClick()">Registrieren</button>
   </mat-card-actions>
 </mat-card>

@@ -1,0 +1,4 @@
+<app-registrierung-form *ngIf="kleiderspende == null"
+                        (registrierungClicked)="onRegistrierungClicked($event)"></app-registrierung-form>
+<app-registrierung-success *ngIf="kleiderspende" [kleiderspende]="kleiderspende"
+                           (weitereSpendeClicked)="onWeitereSpende()"></app-registrierung-success>
