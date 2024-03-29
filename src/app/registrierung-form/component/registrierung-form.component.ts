@@ -58,7 +58,7 @@ import {
     MatDivider,
   ],
   templateUrl: './registrierung-form.component.html',
-  styleUrl: './registrierung-form.component.css',
+  styleUrl: './registrierung-form.component.scss',
 })
 export class RegistrierungFormComponent implements OnInit {
   @Output()
@@ -106,17 +106,14 @@ export class RegistrierungFormComponent implements OnInit {
     this.formGroup.controls.abgabe.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((abgabe) => {
-        console.log(abgabe);
         if (abgabe === AbgabeOptions.ABHOLUNG) {
-          this.formGroup.controls.strasse.setValidators(Validators.required);
-          this.formGroup.controls.plz.setValidators(Validators.required);
-          this.formGroup.controls.ort.setValidators(Validators.required);
-          this.formGroup.updateValueAndValidity();
+          this.formGroup.controls.strasse.enable();
+          this.formGroup.controls.hausnr.enable();
+          this.formGroup.controls.plz.enable();
         } else {
-          this.formGroup.controls.strasse.removeValidators(Validators.required);
-          this.formGroup.controls.plz.removeValidators(Validators.required);
-          this.formGroup.controls.ort.removeValidators(Validators.required);
-          this.formGroup.updateValueAndValidity();
+          this.formGroup.controls.strasse.disable();
+          this.formGroup.controls.hausnr.disable();
+          this.formGroup.controls.plz.disable();
         }
       });
 
@@ -151,7 +148,6 @@ export class RegistrierungFormComponent implements OnInit {
         };
       },
     );
-    console.log(this.abgabeOptions);
   }
 
   protected initKrisengebiete(): void {
@@ -183,7 +179,6 @@ export class RegistrierungFormComponent implements OnInit {
 
   protected onRegistrierenClick(): void {
     this.formGroup.markAllAsTouched();
-
     if (this.formGroup.valid) {
       const kleiderspende: Kleiderspende = {
         vorname: this.formGroup.controls.vorname.value!,
@@ -195,6 +190,7 @@ export class RegistrierungFormComponent implements OnInit {
         ort: this.formGroup.controls.ort.value,
         kleiderarten: this.formGroup.controls.kleiderarten.value!,
         krisengebiet: this.formGroup.controls.krisengebiet.value!,
+        timestamp: new Date(),
       };
 
       this.registrierungClicked.emit(kleiderspende);

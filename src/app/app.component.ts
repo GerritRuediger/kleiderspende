@@ -24,7 +24,7 @@ import { NgIf } from '@angular/common';
     },
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'Kleiderspende';

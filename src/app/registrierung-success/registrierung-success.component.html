@@ -16,9 +16,11 @@
         <span><b>Ort:</b> {{ kleiderspende.plz }} {{ kleiderspende.ort }}</span>
       </mat-list-item>
       <mat-list-item *ngIf="isAdresseVisible()">
-        <span><b>Ausgewählte Spenden:</b> å{{ getSelectedKleiderarten() }}</span>
+        <span><b>Ausgewählte Spenden:</b> {{ getSelectedKleiderarten() }}</span>
       </mat-list-item>
     </mat-list>
+    <p *ngIf="!isAbholung()">Ihre Spende wurde am {{ zeitraum() }} abgegeben</p>
+    <p *ngIf="isAbholung()">Ihre Spende wird am {{ zeitraum() }} abgeholt</p>
   </mat-card-content>
   <mat-card-actions>
     <button mat-flat-button color="primary" (click)="onWeitereSpende()">Weitere Spende registrieren</button>
