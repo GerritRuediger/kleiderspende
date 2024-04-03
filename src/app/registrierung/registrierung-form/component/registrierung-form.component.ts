@@ -2,7 +2,7 @@ import {
   Component,
   DestroyRef,
   EventEmitter,
-  inject,
+  inject, Input,
   OnInit,
   Output,
 } from '@angular/core';
@@ -38,6 +38,7 @@ import {
   plzNaeheValidator,
 } from '../validators/plz-validator';
 import dayjs from 'dayjs';
+import {Dienststelle} from "../../../shared/models/dienststelle";
 
 @Component({
   selector: 'app-registrierung-form',
@@ -69,7 +70,8 @@ export class RegistrierungFormComponent implements OnInit {
   @Output()
   registrierungClicked = new EventEmitter<Kleiderspende>();
 
-  readonly PLZ_DIENSTSTELLE = 41460;
+  @Input()
+  dienststelle! : Dienststelle
 
   formGroup = new FormGroup({
     vorname: new FormControl<string | null>(null, Validators.required),
@@ -82,7 +84,6 @@ export class RegistrierungFormComponent implements OnInit {
     hausnr: new FormControl<string | null>(null, Validators.required),
     plz: new FormControl<number | null>(null, [
       Validators.required,
-      plzNaeheValidator(this.PLZ_DIENSTSTELLE),
       plzLengthValidator(),
     ]),
     ort: new FormControl<string | null>({ value: null, disabled: true }),
@@ -107,6 +108,7 @@ export class RegistrierungFormComponent implements OnInit {
     this.initKrisengebiete();
     this.initKleiderarten();
     this.initAbgabeOptions();
+    this.formGroup.controls.plz.addValidators(plzNaeheValidator(this.dienststelle.plz))
 
     this.formGroup.controls.abgabe.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -174,7 +176,7 @@ export class RegistrierungFormComponent implements OnInit {
     if (this.formGroup.controls.plz.hasError('length')) {
       return 'Das Format entspricht nicht einer Postleitzahl';
     } else if (this.formGroup.controls.plz.hasError('plzNaehe')) {
-      return 'Abholadresse liegt nicht in der Nähe der Geschaeftsstelle';
+      return 'Abholadresse liegt nicht in der Nähe der Geschäftsstelle';
     } else if (this.formGroup.controls.plz.hasError('notValid')) {
       return 'Diese Postleitzahl gibt es nicht';
     } else {

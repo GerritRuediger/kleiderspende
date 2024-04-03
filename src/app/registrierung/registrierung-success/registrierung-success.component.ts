@@ -11,6 +11,7 @@ import { NgIf } from '@angular/common';
 import { AbgabeOptions } from '../../shared/models/abgabe-options';
 import { MatButton } from '@angular/material/button';
 import dayjs from 'dayjs';
+import {Dienststelle} from "../../shared/models/dienststelle";
 
 @Component({
   selector: 'app-registrierung-success',
@@ -31,6 +32,9 @@ import dayjs from 'dayjs';
 export class RegistrierungSuccessComponent {
   @Input()
   kleiderspende!: Kleiderspende;
+
+  @Input()
+  dienststelle! : Dienststelle
 
   @Output()
   weitereSpendeClicked = new EventEmitter<void>();

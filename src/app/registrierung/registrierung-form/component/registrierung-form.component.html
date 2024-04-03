@@ -1,5 +1,5 @@
 <div class="container">
-  <p>Herzlich Willkomen bei der Kleiderspende in 41460 Neuss. Bitte registrieren Sie Ihre Spende in dem nachfolgenden
+  <p>Herzlich Willkomen bei der Kleiderspende in {{dienststelle.plz}} {{dienststelle.ort}}. Bitte registrieren Sie Ihre Spende in dem nachfolgenden
     Formular.</p>
 </div>
 <mat-card>
@@ -80,7 +80,7 @@
     </form>
     @if (isAbgabeOptionAbholung()) {
       <div class="row">
-        Hinweis: Ihre Kleider werden innerhalb 1 bis 5 Tagen abgeholt. Den genauen Zeitpunkt erhalen Sie in Ihrer
+        Hinweis: Ihre Kleider werden innerhalb 1 bis 5 Tagen abgeholt. Den genauen Zeitpunkt erhalten Sie in Ihrer
         Bestätigung.
       </div>
     }
